@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SkySphere – Indian Weather Dashboard</title>
+  <link rel="stylesheet" href="style.css"/>
+  <!-- Google Fonts: Syne (display) + DM Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <!-- Font Awesome for weather icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="light-mode">
+
+  <!-- ========== ANIMATED BACKGROUND ========== -->
+  <div class="bg-scene">
+    <div class="cloud c1"></div>
+    <div class="cloud c2"></div>
+    <div class="cloud c3"></div>
+    <div class="sun-orb"></div>
+    <div class="rain-layer" id="rainLayer"></div>
+  </div>
+
+  <!-- ========== TOP NAV ========== -->
+  <header class="navbar">
+    <div class="logo">
+      <span class="logo-icon"><i class="fa-solid fa-cloud-sun"></i></span>
+      <span class="logo-text">Sky<strong>Sphere</strong></span>
+    </div>
+    <nav class="nav-links">
+      <a href="#dashboard" class="nav-link active">Dashboard</a>
+      <a href="#history-section" class="nav-link">History</a>
+      <a href="#about" class="nav-link">About</a>
+    </nav>
+    <button class="dark-toggle" id="darkToggle" title="Toggle dark mode">
+      <i class="fa-solid fa-moon" id="toggleIcon"></i>
+    </button>
+  </header>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <p class="hero-badge"><i class="fa-solid fa-location-dot"></i> India Weather Intelligence</p>
+      <h1 class="hero-title">Discover the sky<br/><em>above every state.</em></h1>
+      <p class="hero-sub">Real-time weather — beautifully presented, instantly searchable.</p>
+      <a href="#dashboard" class="hero-cta">Explore Weather <i class="fa-solid fa-arrow-down"></i></a>
+    </div>
+    <div class="hero-orb">
+      <div class="orb-ring r1"></div>
+      <div class="orb-ring r2"></div>
+      <div class="orb-ring r3"></div>
+      <i class="fa-solid fa-earth-asia orb-icon"></i>
+    </div>
+  </section>
+
+  <!-- ========== STATS BAR ========== -->
+  <div class="stats-bar">
+    <div class="stat-divider"></div>
+    <div class="stat-item"><span class="stat-num">Live</span><span class="stat-label">Weather Data</span></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item"><span class="stat-num">24/7</span><span class="stat-label">Always Available</span></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item"><span class="stat-num">100%</span><span class="stat-label">Made for India</span></div>
+  </div>
+
+  <!-- ========== DASHBOARD ========== -->
+  <main class="dashboard" id="dashboard">
+    <div class="section-header">
+      <h2 class="section-title">Weather Dashboard</h2>
+      <p class="section-sub">Select any Indian state to view current conditions</p>
+    </div>
+
+    <!-- Search Panel -->
+    <div class="search-panel glass">
+      <div class="search-row">
+        <div class="select-wrap">
+          <i class="fa-solid fa-map-location-dot select-icon"></i>
+          <select id="stateSelect" class="state-select">
+            <option value="">— Choose a State —</option>
+            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="Kerala">Kerala</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+            <option value="Telangana">Telangana</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <option value="Gujarat">Gujarat</option>
+            <option value="Rajasthan">Rajasthan</option>
+            <option value="Punjab">Punjab</option>
+            <option value="West Bengal">West Bengal</option>
+          </select>
+        </div>
+        <button class="search-btn" id="searchBtn" onclick="searchWeather()">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span>Get Weather</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div class="loader-wrap" id="loader" style="display:none">
+      <div class="loader-ring"></div>
+      <p class="loader-text">Fetching weather data…</p>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-msg" id="errorMsg" style="display:none">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span id="errorText">Something went wrong. Please try again.</span>
+    </div>
+
+    <!-- Weather Card -->
+    <div class="weather-card glass" id="weatherCard" style="display:none">
+      <div class="card-left">
+        <div class="card-state-img" id="stateImgWrap">
+          <img id="stateImg" src="" alt="State Image" onerror="this.src='images/default.jpg'"/>
+          <div class="img-overlay"></div>
+        </div>
+      </div>
+      <div class="card-right">
+        <div class="card-header-row">
+          <div>
+            <p class="card-country">India</p>
+            <h2 class="card-state" id="cardState">—</h2>
+          </div>
+          <div class="weather-icon-wrap" id="weatherIconWrap">
+            <i class="fa-solid fa-sun weather-icon" id="weatherIcon"></i>
+          </div>
+        </div>
+
+        <div class="temp-display">
+          <span class="temp-big" id="cardTemp">—</span>
+        </div>
+
+        <p class="condition-label" id="cardCondition">—</p>
+
+        <div class="metrics-row">
+          <div class="metric-box">
+            <i class="fa-solid fa-droplet metric-icon"></i>
+            <div>
+              <p class="metric-val" id="cardHumidity">—</p>
+              <p class="metric-name">Humidity</p>
+            </div>
+          </div>
+          <div class="metric-box">
+            <i class="fa-solid fa-wind metric-icon"></i>
+            <div>
+              <p class="metric-val" id="cardWind">—</p>
+              <p class="metric-name">Wind</p>
+            </div>
+          </div>
+          <div class="metric-box">
+            <i class="fa-solid fa-eye metric-icon"></i>
+            <div>
+              <p class="metric-val" id="cardVisibility">—</p>
+              <p class="metric-name">Visibility</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer-row">
+          <span class="searched-at" id="searchedAt"></span>
+          <button class="share-btn" onclick="shareWeather()"><i class="fa-solid fa-share-nodes"></i> Share</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- State Cards Grid (quick picks) -->
+    <div class="section-header" style="margin-top:3rem">
+      <h2 class="section-title">Quick State Picks</h2>
+      <p class="section-sub">Click any card to instantly view weather</p>
+    </div>
+    <div class="states-grid" id="statesGrid">
+      <!-- Filled by JS -->
+    </div>
+  </main>
+
+  <!-- ========== HISTORY ========== -->
+  <section class="history-section" id="history-section">
+    <div class="section-header">
+      <h2 class="section-title">Search History</h2>
+      <p class="section-sub">Recent weather lookups from the database</p>
+    </div>
+    <div class="history-controls">
+      <button class="load-history-btn" onclick="loadHistory()">
+        <i class="fa-solid fa-clock-rotate-left"></i> Load History
+      </button>
+      <button class="clear-history-btn" onclick="clearHistoryUI()">
+        <i class="fa-solid fa-trash"></i> Clear View
+      </button>
+    </div>
+    <div class="history-table-wrap glass" id="historyWrap" style="display:none">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>State</th>
+            <th>Temperature</th>
+            <th>Condition</th>
+            <th>Searched At</th>
+          </tr>
+        </thead>
+        <tbody id="historyBody">
+          <!-- Rows injected by JS -->
+        </tbody>
+      </table>
+    </div>
+    <div class="history-empty" id="historyEmpty" style="display:none">
+      <i class="fa-solid fa-database"></i>
+      <p>No search history found.</p>
+    </div>
+  </section>
+
+  <!-- ========== ABOUT ========== -->
+  <section class="about-section" id="about">
+    <div class="about-inner glass">
+      <div class="about-icon"><i class="fa-solid fa-cloud-sun-rain"></i></div>
+      <h2>About SkySphere</h2>
+<p>
+SkySphere is a modern weather intelligence platform designed to provide real-time weather insights across major Indian states through an interactive and visually engaging experience. The project focuses on delivering accurate weather information, location highlights, and a seamless user interface for easy exploration and analysis.
+</p>
+
+<div class="creator-info">
+  <p><strong>Created By:</strong> Mohamed Suhaj</p>
+  <p><strong>Email:</strong> mhdsuhaj007@gmail.com</p>
+</div>      
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer-logo">
+      <i class="fa-solid fa-cloud-sun"></i> SkySphere
+    </div>
+    <p class="footer-copy">© 2025 SkySphere · Built with Java Servlets &amp; JDBC</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

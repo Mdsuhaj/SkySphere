@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ================================================================
+  web.xml — Deployment Descriptor for SkySphere
+  Location: WebContent/WEB-INF/web.xml
+             (or src/main/webapp/WEB-INF/web.xml)
+
+  Purpose:
+    - Registers Java Servlets with the Tomcat container
+    - Maps URL patterns to servlet classes
+    - Sets welcome file (index.html)
+
+  Servlet API version: 5.0  (Jakarta EE 9, used by Tomcat 10.1)
+  NOTE: Tomcat 10.x uses jakarta.* NOT javax.* — use the
+        jakarta-servlet-api JAR from Tomcat's lib folder.
+  ================================================================
+-->
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                             https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
+         version="5.0">
+
+  <!-- ─── Application Display Name ──────────────────────────── -->
+  <display-name>SkySphere Weather Dashboard</display-name>
+
+  <!-- ─── Servlet 1: WeatherServlet ─────────────────────────── -->
+  <!--
+    This servlet handles weather queries.
+    Frontend calls: GET /SkySphere/WeatherServlet?state=Tamil Nadu
+  -->
+  <servlet>
+    <servlet-name>WeatherServlet</servlet-name>
+    <servlet-class>WeatherServlet</servlet-class>  <!-- Fully-qualified class name -->
+    <load-on-startup>1</load-on-startup>            <!-- Load immediately at Tomcat start -->
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>WeatherServlet</servlet-name>
+    <url-pattern>/WeatherServlet</url-pattern>      <!-- URL path pattern -->
+  </servlet-mapping>
+
+  <!-- ─── Servlet 2: HistoryServlet ─────────────────────────── -->
+  <!--
+    This servlet returns all search history as JSON.
+    Frontend calls: GET /SkySphere/HistoryServlet
+  -->
+  <servlet>
+    <servlet-name>HistoryServlet</servlet-name>
+    <servlet-class>HistoryServlet</servlet-class>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>HistoryServlet</servlet-name>
+    <url-pattern>/HistoryServlet</url-pattern>
+  </servlet-mapping>
+
+  <!-- ─── Welcome File ───────────────────────────────────────── -->
+  <!--
+    When user visits http://localhost:8080/SkySphere/
+    Tomcat will automatically serve index.html
+  -->
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+  </welcome-file-list>
+
+  <!-- ─── Session Config ─────────────────────────────────────── -->
+  <session-config>
+    <session-timeout>30</session-timeout>  <!-- Session expires after 30 minutes -->
+  </session-config>
+
+</web-app>
