@@ -27,15 +27,14 @@ public class DatabaseConnection {
 
     /** JDBC URL format: jdbc:mysql://<host>:<port>/<database>?options */
 	private static final String URL =
-		    "jdbc:mysql://monorail.proxy.rlwy.net:23306/railway"
-		    //              ↑ your MYSQL_HOST           ↑ your MYSQL_PORT
-		    + "?useSSL=true"
-		    + "&serverTimezone=Asia/Kolkata"
-		    + "&allowPublicKeyRetrieval=true";
+		    "jdbc:mysql://"
+		    + System.getenv("DB_HOST") + ":"
+		    + System.getenv("DB_PORT") + "/"
+		    + System.getenv("DB_NAME")
+		    + "?useSSL=true&serverTimezone=Asia/Kolkata&allowPublicKeyRetrieval=true";
 
-		private static final String USER     = "root";
-		private static final String PASSWORD = "nOoKKajsavgFbrhxHJwblANgokkZMxVv";
-//		                                      ↑ your MYSQL_PASSWORD
+		private static final String USER     = System.getenv("DB_USER");
+		private static final String PASSWORD = System.getenv("DB_PASSWORD");
 
     // ── Static initializer: load the driver once ───────────────
     static {
