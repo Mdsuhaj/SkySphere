@@ -347,26 +347,29 @@ public class WeatherServlet extends HttpServlet {
      * Inserts one row into search_history with REAL weather data.
      */
     private void saveToDatabase(String stateName, String temp,
-                                String condition, String searchTime) {
-        String sql = "INSERT INTO search_history "
-                   + "(state_name, temperature, weather_condition, search_time) "
-                   + "VALUES (?, ?, ?, ?)";
+            String condition, String searchTime) {
+String sql = "INSERT INTO search_history "
++ "(state_name, searched_at, temperature, "
++ "weather_condition) "
++ "VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+try (Connection conn = DatabaseConnection.getConnection();
+PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, stateName);
-            ps.setString(2, temp);
-            ps.setString(3, condition);
-            ps.setString(4, searchTime);
-            ps.executeUpdate();
+ps.setString(1, stateName);
+ps.setString(2, searchTime);
+ps.setString(3, temp);
+ps.setString(4, condition);
+ps.executeUpdate();
 
-            System.out.println("[WeatherServlet] Saved to DB: " + stateName + " " + temp);
+System.out.println("[WeatherServlet] Saved to DB: "
++ stateName + " " + temp);
 
-        } catch (SQLException e) {
-            System.err.println("[WeatherServlet] DB error: " + e.getMessage());
-        }
-    }
+} catch (SQLException e) {
+System.err.println("[WeatherServlet] DB error: "
++ e.getMessage());
+}
+}
 
     // ── Escape JSON string ────────────────────────────────────────
     private String escapeJson(String s) {
