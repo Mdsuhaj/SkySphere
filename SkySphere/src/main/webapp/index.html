@@ -30,7 +30,6 @@
     </div>
     <nav class="nav-links">
       <a href="#dashboard" class="nav-link active">Dashboard</a>
-      <a href="#history-section" class="nav-link">History</a>
       <a href="#about" class="nav-link">About</a>
     </nav>
     <button class="dark-toggle" id="darkToggle" title="Toggle dark mode">
@@ -176,40 +175,7 @@
   </main>
 
   <!-- ========== HISTORY ========== -->
-  <section class="history-section" id="history-section">
-    <div class="section-header">
-      <h2 class="section-title">Search History</h2>
-      <p class="section-sub">Recent weather lookups from the database</p>
-    </div>
-    <div class="history-controls">
-      <button class="load-history-btn" onclick="loadHistory()">
-        <i class="fa-solid fa-clock-rotate-left"></i> Load History
-      </button>
-      <button class="clear-history-btn" onclick="clearHistoryUI()">
-        <i class="fa-solid fa-trash"></i> Clear View
-      </button>
-    </div>
-    <div class="history-table-wrap glass" id="historyWrap" style="display:none">
-      <table class="history-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>State</th>
-            <th>Temperature</th>
-            <th>Condition</th>
-            <th>Searched At</th>
-          </tr>
-        </thead>
-        <tbody id="historyBody">
-          <!-- Rows injected by JS -->
-        </tbody>
-      </table>
-    </div>
-    <div class="history-empty" id="historyEmpty" style="display:none">
-      <i class="fa-solid fa-database"></i>
-      <p>No search history found.</p>
-    </div>
-  </section>
+
 
   <!-- ========== ABOUT ========== -->
   <section class="about-section" id="about">

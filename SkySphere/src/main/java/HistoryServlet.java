@@ -57,9 +57,9 @@ public class HistoryServlet extends HttpServlet {
 
         // SQL: select all rows, newest first
         String sql = "SELECT id, state_name, temperature, weather_condition, "
-                   + "DATE_FORMAT(search_time, '%Y-%m-%d %H:%i:%s') AS search_time "
+                   + "DATE_FORMAT(searched_at, '%Y-%m-%d %H:%i:%s') AS searched_at "
                    + "FROM search_history "
-                   + "ORDER BY search_time DESC "
+                   + "ORDER BY searched_at DESC "
                    + "LIMIT 50";   // Cap at 50 rows for performance
 
         // StringBuilder to accumulate the JSON array string
@@ -85,7 +85,7 @@ public class HistoryServlet extends HttpServlet {
                 String stateName = rs.getString("state_name");
                 String temp      = rs.getString("temperature");
                 String condition = rs.getString("weather_condition");
-                String time      = rs.getString("search_time");
+                String time      = rs.getString("searched_at");
 
                 // Build one JSON object for this row
                 json.append("{")
